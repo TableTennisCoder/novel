@@ -5,6 +5,7 @@ import {
   Heading2,
   Heading3,
   ImageIcon,
+  Instagram,
   List,
   ListOrdered,
   MessageSquarePlus,
@@ -16,6 +17,7 @@ import {
 import { createSuggestionItems } from "novel/extensions";
 import { Command, renderItems } from "novel/extensions";
 import { uploadFn } from "./image-upload";
+import { InstagramEmbed } from "react-social-media-embed";
 
 export const suggestionItems = createSuggestionItems([
   {
@@ -33,7 +35,12 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["p", "paragraph"],
     icon: <Text size={18} />,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).toggleNode("paragraph", "paragraph").run();
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .toggleNode("paragraph", "paragraph")
+        .run();
     },
   },
   {
@@ -51,7 +58,12 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["title", "big", "large"],
     icon: <Heading1 size={18} />,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run();
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNode("heading", { level: 1 })
+        .run();
     },
   },
   {
@@ -60,7 +72,12 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["subtitle", "medium"],
     icon: <Heading2 size={18} />,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run();
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNode("heading", { level: 2 })
+        .run();
     },
   },
   {
@@ -69,7 +86,12 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["subtitle", "small"],
     icon: <Heading3 size={18} />,
     command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run();
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNode("heading", { level: 3 })
+        .run();
     },
   },
   {
@@ -96,14 +118,21 @@ export const suggestionItems = createSuggestionItems([
     searchTerms: ["blockquote"],
     icon: <TextQuote size={18} />,
     command: ({ editor, range }) =>
-      editor.chain().focus().deleteRange(range).toggleNode("paragraph", "paragraph").toggleBlockquote().run(),
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .toggleNode("paragraph", "paragraph")
+        .toggleBlockquote()
+        .run(),
   },
   {
     title: "Code",
     description: "Capture a code snippet.",
     searchTerms: ["codeblock"],
     icon: <Code size={18} />,
-    command: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
+    command: ({ editor, range }) =>
+      editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
   },
   {
     title: "Image",
@@ -161,7 +190,9 @@ export const suggestionItems = createSuggestionItems([
     icon: <Twitter size={18} />,
     command: ({ editor, range }) => {
       const tweetLink = prompt("Please enter Twitter Link");
-      const tweetRegex = new RegExp(/^https?:\/\/(www\.)?x\.com\/([a-zA-Z0-9_]{1,15})(\/status\/(\d+))?(\/\S*)?$/);
+      const tweetRegex = new RegExp(
+        /^https?:\/\/(www\.)?x\.com\/([a-zA-Z0-9_]{1,15})(\/status\/(\d+))?(\/\S*)?$/,
+      );
 
       if (tweetRegex.test(tweetLink)) {
         editor
@@ -176,6 +207,50 @@ export const suggestionItems = createSuggestionItems([
         if (tweetLink !== null) {
           alert("Please enter a correct Twitter Link");
         }
+      }
+    },
+  },
+  {
+    title: "Instagram",
+    description: "Embed an Instagram Post.",
+    searchTerms: ["instagram", "embed"],
+    icon: <Instagram size={18} />,
+    command: ({ editor, range }) => {
+      const embedCode = prompt("Please enter Instagram Embed Code");
+
+      if (embedCode) {
+        // editor
+        //   .chain()
+        //   .focus()
+        //   .deleteRange(range)
+        //   .insertContent([
+        //     {
+        //       type: "heading",
+        //       attrs: { level: 1 },
+        //       content: [
+        //         {
+        //           type: "text",
+        //           text: "First paragraph",
+        //         },
+        //       ],
+        //     },
+        //   ])
+        //   .run();
+        editor
+          .chain()
+          .focus()
+          .insertContent({
+            type: "iframe",
+            attrs: {
+              // src: `${embedCode}/embed/captioned/?cr=1&v=14&wp=326&rd=https%3A%2F%2Fjustinmahar.github.io&rp=%2Freact-social-media-embed%2Fiframe.html%3FviewMode%3Dstory%26id%3Dembeds-instagramembed--main-example-with-captions%26args%3D#%7B%22ci%22%3A10%2C%22os%22%3A149207.5%2C%22ls%22%3A5073.100000023842%2C%22le%22%3A5076.100000023842%7D`,
+              src: `${embedCode}/embed`,
+              width: 400,
+              height: 800,
+            },
+          })
+          .run();
+      } else {
+        alert("Please enter a valid Instagram Embed Code");
       }
     },
   },
